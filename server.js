@@ -13,12 +13,12 @@ var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-require('./config/passport')(passport);//pass passport for configuration
+
 
 
 //configuration------------------
 
-var dbURI = 'mongodb://localhost/node-auth';
+var dbURI = 'mongodb://localhost/mean-auth';
 var databaseType = "LOCAL";
 if (process.env.NODE_ENV === 'production') {
   databaseType = "REMOTE";
@@ -38,8 +38,8 @@ app.use(cookieParser());//read cookies - needed for auth
 app.use(bodyParser.json());//get information from html forms
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, 'public')));
-//app.use(express.static(path.join(__dirname, 'app_client')));
-app.set('view engine', 'ejs');// set up ejs for templating
+app.use(express.static(path.join(__dirname, 'client')));
+//app.set('views', path.join(__dirname, 'client', 'index.html'));
 
 //required for passport---------------------------
 app.use(session({
@@ -50,9 +50,9 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());//persist login sessions
 app.use(flash());//use connet-flash for flash messages stored in session
-
-//routes-------------------------------
+require('./config/passport')(passport);//pass passport for configuration
 require('./app/routes.js')(app, passport);//load our routes and pass in our app and fully configured passport
+
 
 
 //launch-----------------------

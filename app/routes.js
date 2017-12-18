@@ -2,7 +2,7 @@ module.exports = function (app, passport) {
 
   //Home page
   app.get('/', function (req, res) {
-    res.render('index.ejs'); //load the index.ejs file
+    res.sendFile('../client/index.html'); //load the index.html file
   });
 
   //Login
@@ -89,11 +89,11 @@ module.exports = function (app, passport) {
   /******************LINKING ACCOUNTS ROUTES***************************/
 
   /**********************LOCAL************************/
-  app.get('/connect/local', function (req, res) {
+/*  app.get('/connect/local', function (req, res) {
     res.render('connect-local.ejs', {
       message: req.flash('loginMessage')
     });
-  });
+  });*/
 
   app.post('/connect/local', passport.authenticate('local-signup', {
     successRedirect: '/profile', //redirect to the secure profile section
@@ -184,7 +184,15 @@ module.exports = function (app, passport) {
       res.redirect('/profile');
     });
   });
+  
+  //catch all other routes and redirect them to home page-------------------------------
+
+  app.all('/*', function(req, res) {
+    res.redirect('/');
+  });
 };
+
+
 //Route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
 
